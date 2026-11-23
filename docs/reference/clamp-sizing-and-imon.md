@@ -54,6 +54,33 @@ D1 is what makes the clamp invisible in normal operation. Without it, the TVS wo
 
 **I MON measures current through the driver's internal sense element, not the current in the coil.** The moment the clamp conducts, the coil current freewheels LDC → D1 → TVS → LDA and bypasses the driver entirely, so **I MON reads ~0 while the coil is still carrying amps.** This is structural — no clamp topology avoids it, because freewheeling *means* bypassing the driver.
 
+![what a fault looks like](../../figures/fault-clamp-waveform.png)
+
+Simulated by [sim_fault_clamp.py](../../scripts/sim_fault_clamp.py) · [output](../../outputs/fault-clamp.txt).
+Blue is the normal ramp with the clamp asleep; magenta is a fault. The shaded band is the
+77 µs the clamp is actually conducting.
+
+| | Normal ramp | Fault |
+|---|---|---|
+| Peak LDC | 20.95 V, at the **end** | **23.07 V, immediately** |
+| LDC shape | linear climb 18.5 → 21.0 V | step, then a **flat top** drooping 0.38 V |
+| Current path | all through the driver | all through D1 + TVS |
+| Decay to 10 % | 95.5 µs | **68.9 µs** |
+| I MON | tracks the coil | **~0 while the coil is full** |
+
+Three details in that figure are worth knowing before you see them on a scope:
+
+- **The rising edge is nanoseconds, not microseconds.** With the driver no longer sinking,
+  the coil charges stray capacitance at `i/C` — about 2.5 GV/s into 1 nF. It is drawn slowed
+  down to be visible. You need a fast timebase to catch it.
+- **The flat top is not flat.** It droops from 23.07 V to 22.70 V as the current decays,
+  because D1's forward drop and the TVS's dynamic-resistance term both shrink with current.
+  Seeing that ~0.4 V droop is good evidence you are genuinely in breakdown and not sitting
+  in the knee.
+- **The fault decays 1.39× *faster* than the working ramp.** A constant-voltage clamp is the
+  optimal trajectory, so letting the clamp do the work always beats a commanded ramp. That
+  speed is what gets given up to keep the monitor honest.
+
 The fix is to **stop using the clamp as the ramp mechanism.** Size it to sit *above* the working ramp so it only fires on faults. Then the driver stays in regulation and I MON stays true.
 
 With a commanded linear ramp of duration T and the driver in regulation:

@@ -1,0 +1,18 @@
+V+ = 12 V | L = 0.38 mH | R = 0.99 ohm | I0 = 2.5 A
+
+FAULT: coil freewheels through D1 + TVS
+  LDC pinned          23.07 V at 2.5 A  ->  22.70 V as i -> 0   (droop 0.38 V)
+  opposing voltage    11.07 V
+  decay to 10 %        68.9 us
+  current reaches 0    77.4 us   (clamp conducts for this long)
+  I MON              reads ~0 throughout, while the coil is still energised
+
+NORMAL RAMP: driver stays in regulation, clamp asleep
+  commanded T         106.1 us
+  LDC steady           9.53 V
+  LDC step at t=0     18.48 V
+  LDC peak (at end)   20.95 V   margin to clamp 2.12 V
+  decay to 10 %        95.5 us
+  I MON              tracks the coil for the whole ramp
+
+The fault decays 1.39x FASTER than the working ramp -- a constant-voltage clamp is the optimal trajectory. That speed is given up deliberately to keep I MON valid.

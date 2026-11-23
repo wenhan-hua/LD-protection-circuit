@@ -220,6 +220,12 @@ experiment needs a valid current readback. The resolution: **size the clamp abov
 working ramp**, so the driver stays in regulation and the clamp becomes fault-only
 protection. The cost of a trustworthy monitor is 26 µs.
 
+![what a fault looks like](../figures/fault-clamp-waveform.png)
+
+Simulated by [sim_fault_clamp.py](../scripts/sim_fault_clamp.py) · [output](../outputs/fault-clamp.txt). Blue is the normal ramp, magenta a fault: LDC steps
+straight to a 23 V flat top while I MON collapses to zero with the coil still energised.
+**Both traces changing at once is the signature to look for during bring-up** (§8 step 5).
+
 Detail, including the TVS's three operating regions: [clamp-sizing-and-imon.md](reference/clamp-sizing-and-imon.md).
 
 ## 8. Bring-up
