@@ -1,9 +1,9 @@
 usable overshoot dV = 8.95 V   commanded ramp T = 106 us   t to 10 % = 96 us   (identical for both designs)
 
 A — D1 + TVS (no series resistor)
-  V+ 8 V, R 0.99 ohm | LDC steady 5.53 V (margin 3.53 V) | driver 13.8 W, Rs 0.0 W
-  ramp: LDC steps to 14.5 V, rises to 17.0 V, falls to 8 V | clamp fires at 18.9 V
-  driver peak 36 W, avg over ramp 19 W | ramp-up 204 us | clamp-assisted would be 70 us
+  V+ 12 V, R 0.99 ohm | LDC steady 9.53 V (margin 7.53 V) | driver 23.8 W, Rs 0.0 W
+  ramp: LDC steps to 18.5 V, rises to 21.0 V, falls to 12 V | clamp fires at 22.9 V
+  driver peak 46 W, avg over ramp 24 W | ramp-up 109 us | clamp-assisted would be 70 us
 
 B — series 2 Ω + D1 + TVS
   V+ 12 V, R 2.99 ohm | LDC steady 4.52 V (margin 2.52 V) | driver 11.3 W, Rs 12.5 W

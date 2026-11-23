@@ -1,6 +1,6 @@
 """Fastest SAFE ramp-down, simulated separately for each candidate design.
 
-  A: D1 + 1.5KE10A,             no series resistor, V+ = 8 V,  R = 0.99 ohm
+  A: D1 + 1.5KE10A,             no series resistor, V+ = 12 V, R = 0.99 ohm
   B: D1 + 1.5KE10A + 2 ohm Rs,                      V+ = 12 V, R = 2.99 ohm
 
 "Safe" = driver stays in regulation for the whole ramp, so the clamp never conducts
@@ -26,7 +26,7 @@ T = L * I0 / DV
 VCLAMP = VBR + VF
 
 DESIGNS = [
-    dict(key="a", name="A — D1 + TVS (no series resistor)", VP=8.0, R=0.99, RS=0.0, c="#2a78d6"),
+    dict(key="a", name="A — D1 + TVS (no series resistor)", VP=12.0, R=0.99, RS=0.0, c="#2a78d6"),
     dict(key="b", name="B — series 2 Ω + D1 + TVS", VP=12.0, R=2.99, RS=2.0, c="#eb6834"),
 ]
 
@@ -93,7 +93,7 @@ for D in DESIGNS:
     b.text(198, VP + VCLAMP + 0.5, f"clamp fires at {VP+VCLAMP:.1f} V", ha="right", fontsize=9, color=INK2)
     for xx, yy, lab, dxy in ((2, ldc_ss + DV, f"① step to {ldc_ss+DV:.1f} V", (8, -4)),
                              (T * 1e6 * 0.55, VP - I0 * R * 0.45 + DV, "② rises as i·R shrinks", (-6, 10)),
-                             (T * 1e6 + 3, VP, f"③ back to V+ = {VP:.0f} V", (8, -2))):
+                             (T * 1e6 + 3, VP, f"③ back to V+ = {VP:.0f} V", (8, -16))):
         b.annotate(lab, (xx, yy), textcoords="offset points", xytext=dxy, fontsize=9, color=INK)
     b.set_ylim(0, VP + VCLAMP + 5)
     style(b, "LDC — what you would scope (differential probe)", "time [µs]", "LDC [V]")
@@ -103,7 +103,9 @@ for D in DESIGNS:
     for y, lab in ((25, "25 W no-airflow limit"), (35, "35 W with airflow")):
         cc.axhline(y, color=INK2, lw=0.9, ls=(0, (4, 3)))
         cc.text(198, y + 0.8, lab, ha="right", fontsize=8.5, color=INK2)
-    cc.set_ylim(0, 43)
+    cc.annotate(f"steady state {ldc_ss*I0:.1f} W", (-24, ldc_ss * I0), textcoords="offset points",
+                xytext=(2, -15), fontsize=9, color=c, fontweight="bold")
+    cc.set_ylim(0, max(43.0, p.max() * 1.22))
     style(cc, f"Driver dissipation (peak {p.max():.0f} W, avg {p_avg:.0f} W over the ramp)",
           "time [µs]", "power [W]")
     # (d) I MON
