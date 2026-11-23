@@ -1,0 +1,14 @@
+R_total = 2.99 ohm   tau = L/R = 127 us
+at 2.5 A: load drop = 7.48 V, LDC = 4.52 V (compliance floor 2 V -> margin 2.52 V)
+  driver dissipates 11.3 W   (was 23.8 W without Rs)
+  Rs dissipates 12.5 W, cables 5.0 W, coil 1.2 W
+
+ramp-up: driver can reach 3.34 A; 0 -> 2.5 A takes 175 us (vs 109 us without Rs)
+
+clamp part              V at 2.5 A  peak LDC  t to 10%
+none (D1 only)               0.9 V    12.9 V     204 us
+1.5KE6.8A                    7.9 V    19.9 V      73 us
+1.5KE10A                    11.1 V    23.1 V      57 us
+1.5KE15A                    16.2 V    28.2 V      42 us
+
+saved diagram

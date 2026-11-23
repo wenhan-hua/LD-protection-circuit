@@ -11,3 +11,4 @@ Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 - [docs/datasheet-check.md](docs/datasheet-check.md): LD5CHA specs verified against the Wavelength datasheet
 - [docs/ramp-down-analysis.md](docs/ramp-down-analysis.md): ramp-down timescale versus peak voltage and heat
 - [docs/ramp-speed-options.md](docs/ramp-speed-options.md): ways to speed up the ramp-down, simplest first
+- [docs/chosen-design.md](docs/chosen-design.md): **chosen design** — series 2 Ω + D1 + TVS clamp
