@@ -1,7 +1,7 @@
 """Chosen design: series 2 ohm + D1 + TVS clamp across BOTH, driven by the LD5CHA.
 
-Draws docs/series_r_clamp.png/.svg and prints the operating point and clamp options.
-Run: .venv/bin/python scripts/draw_series_r_clamp.py
+Draws figures/schematic-series-resistor-clamp.png/.svg and prints the operating point and clamp options.
+Run: .venv/bin/python scripts/draw_series_resistor_clamp.py
 """
 import numpy as np
 import schemdraw
@@ -65,6 +65,6 @@ with schemdraw.Drawing(show=False) as d:
         'turn-off path:  LDC \u2192 D1 \u2192 TVS \u2192 LDA', fontsize=10)
     d += elm.Label().at((15.2, 0)).label('4.5 V\nat 2.5 A', fontsize=9.5)
 
-d.save('docs/series_r_clamp.png', dpi=200)
-d.save('docs/series_r_clamp.svg')
+d.save('figures/schematic-series-resistor-clamp.png', dpi=200)
+d.save('figures/schematic-series-resistor-clamp.svg')
 print('\nsaved diagram')

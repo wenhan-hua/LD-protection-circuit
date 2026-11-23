@@ -11,7 +11,7 @@ Commanded linear ramp, duration T = L*I0/dV (peak LDC is at the end, where i -> 
     i(t)   = I0 (1 - t/T)
     LDC(t) = V+ - i R + L I0 / T   ->  V+ once the ramp ends
     P_drv  = LDC * i
-Writes docs/method_a_ramp.png and docs/method_b_ramp.png.
+Writes figures/ramp-sim-d1-tvs.png and figures/ramp-sim-series-resistor.png.
 Run: .venv/bin/python scripts/sim_fastest_safe_ramp.py
 """
 import numpy as np
@@ -26,8 +26,8 @@ T = L * I0 / DV
 VCLAMP = VBR + VF
 
 DESIGNS = [
-    dict(key="a", name="A — D1 + TVS (no series resistor)", VP=12.0, R=0.99, RS=0.0, c="#2a78d6"),
-    dict(key="b", name="B — series 2 Ω + D1 + TVS", VP=12.0, R=2.99, RS=2.0, c="#eb6834"),
+    dict(key="a", fig="d1-tvs", name="A — D1 + TVS (no series resistor)", VP=12.0, R=0.99, RS=0.0, c="#2a78d6"),
+    dict(key="b", fig="series-resistor", name="B — series 2 Ω + D1 + TVS", VP=12.0, R=2.99, RS=2.0, c="#eb6834"),
 ]
 
 BG, INK, INK2, GRID, C_CA = "#fcfcfb", "#0b0b0b", "#52514e", "#e6e5e1", "#1baf7a"
@@ -126,5 +126,5 @@ for D in DESIGNS:
                  f"(L = 0.38 mH, R = {R:.2f} Ω, 1.5KE10A)",
                  x=0.01, ha="left", fontsize=12, fontweight="bold")
     fig.tight_layout(rect=(0, 0, 1, 0.955))
-    fig.savefig(f"docs/method_{D['key']}_ramp.png", dpi=150)
+    fig.savefig(f"figures/ramp-sim-{D['fig']}.png", dpi=150)
 print("saved both figures")

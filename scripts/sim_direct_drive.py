@@ -1,5 +1,5 @@
 """Simulate ramp-up (driver saturated at compliance) and ramp-down (D1 freewheel) for the direct-drive circuit.
-Run: .venv/bin/python scripts/sim_direct_drive.py -> docs/direct_drive_sim.png + printed numbers
+Run: .venv/bin/python scripts/sim_direct_drive.py -> figures/direct-drive-sim.png + printed numbers
 """
 import numpy as np
 import matplotlib
@@ -54,4 +54,4 @@ ax[0].plot(up.t * 1e3, np.minimum(up.y[0], 3.0) if False else up.y[0]); ax[0].ax
 ax[0].set(title=f"Ramp-up, V+ = {vp:.0f} V (saturated drive, until setpoint)", xlabel="ms", ylabel="coil current [A]")
 ax[1].plot(td * 1e3, dn.sol(td)[0]); ax[1].set(title=f"Ramp-down via D1 only ({tend*1e3:.2f} ms)", xlabel="ms")
 for a in ax: a.grid(alpha=.3)
-fig.tight_layout(); fig.savefig("docs/direct_drive_sim.png", dpi=150)
+fig.tight_layout(); fig.savefig("figures/direct-drive-sim.png", dpi=150)

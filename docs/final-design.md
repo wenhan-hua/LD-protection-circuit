@@ -1,10 +1,10 @@
 # Method A — D1 + TVS, no series resistor
 
-![schematic](d1_zener.png)
+![schematic](../figures/schematic-d1-tvs-clamp.png)
 
-Schematic source: [draw_d1_zener.py](../scripts/draw_d1_zener.py) · [SVG](d1_zener.svg) · [numbers](d1_zener_output.txt)
-Simulation source: [sim_fastest_safe_ramp.py](../scripts/sim_fastest_safe_ramp.py) · [output](fastest_safe_ramp_output.txt)
-Background on the clamp and the monitor: [imon-and-tvs.md](imon-and-tvs.md). The other candidate: [method B](method-b-series-resistor.md).
+Schematic source: [draw_d1_tvs_clamp.py](../scripts/draw_d1_tvs_clamp.py) · [SVG](../figures/schematic-d1-tvs-clamp.svg) · [numbers](../outputs/d1-tvs-clamp.txt)
+Simulation source: [sim_fastest_safe_ramp.py](../scripts/sim_fastest_safe_ramp.py) · [output](../outputs/fastest-safe-ramp.txt)
+Background on the clamp and the monitor: [clamp-sizing-and-imon.md](reference/clamp-sizing-and-imon.md). The other candidate: [method B](alternatives/series-resistor.md).
 
 **Load (confirmed):** L = 0.38 mH, coil R = 0.19 Ω, cables ≈ 0.8 Ω → R_loop = **0.99 Ω**, τ = **384 µs**. I = 2.5 A.
 
@@ -19,9 +19,9 @@ In the intended operating mode the clamp **never conducts** — it is fault prot
 
 ## Choosing V+
 
-![supply voltage window](supply_voltage_window.png)
+![supply voltage window](../figures/supply-voltage-window.png)
 
-Source: [supply_voltage_window.py](../scripts/supply_voltage_window.py) · [output](supply_voltage_output.txt)
+Source: [supply_voltage_window.py](../scripts/supply_voltage_window.py) · [output](../outputs/supply-voltage-window.txt)
 
 Without a series resistor the load only drops 2.48 V at 2.5 A, so the driver absorbs everything else. Three constraints bracket the supply:
 
@@ -58,7 +58,7 @@ If the case runs hot and you cannot add a fan, 10 V (75 %, 142 µs ramp-up) give
 
 ## Fastest safe ramp-down
 
-![simulation](method_a_ramp.png)
+![simulation](../figures/ramp-sim-d1-tvs.png)
 
 "Safe" means the driver stays in regulation the whole way down, so the clamp never conducts and **I MON keeps reading the true coil current**. That caps the inductive overshoot at the TVS standoff:
 
@@ -93,7 +93,7 @@ The square corners are idealised. The driver's loop is ~0.8 µs, so expect round
 | Ref | Part | Why |
 |---|---|---|
 | D1 | MUR460 (4 A, 600 V ultrafast) — or 1N5408 (3 A, 1000 V) | Silicon, **not Schottky**: Schottky leakage runs to tens of mA when hot, and it flows in parallel with the coil, so the coil would get less current than the driver regulates. The reverse voltage across the D1 + TVS string is only I₀·R ≈ 2.5 V, so the 600 V rating is wild overkill — you are buying the current rating and the soft turn-off, not the volts |
-| TVS | **1.5KE10A**, unidirectional, axial | 8.55 V standoff sets the usable ramp; breakdown at 10 V gives a flat clamp at 2.5 A. See [imon-and-tvs.md](imon-and-tvs.md) for why not the 6.8 V part |
+| TVS | **1.5KE10A**, unidirectional, axial | 8.55 V standoff sets the usable ramp; breakdown at 10 V gives a flat clamp at 2.5 A. See [clamp-sizing-and-imon.md](reference/clamp-sizing-and-imon.md) for why not the 6.8 V part |
 | — | Barrier terminal block | Both parts sit in it, cathode to cathode, across J1:1–J1:2 |
 
 ## Mounting — an advantage this design has
@@ -105,7 +105,7 @@ Peak LDC is the same wherever the clamp sits; only the freewheel loop resistance
 | Driver terminals (cables in the loop) | 0.99 Ω | 403 µs | 93 µs |
 | Coil terminals (cables outside) | 0.19 Ω | 713 µs | 105 µs |
 
-With a TVS fitted, mounting at the **coil** costs only ~12 µs in the fault case and means a broken cable on the driver side still leaves the coil a freewheel path. [Method B](method-b-series-resistor.md) cannot do this, because its clamp has to span the series resistor.
+With a TVS fitted, mounting at the **coil** costs only ~12 µs in the fault case and means a broken cable on the driver side still leaves the coil a freewheel path. [Method B](alternatives/series-resistor.md) cannot do this, because its clamp has to span the series resistor.
 
 ## Bring-up
 

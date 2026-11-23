@@ -1,6 +1,6 @@
 # DigiKey order list — Method A
 
-For [method A](method-a-d1-tvs.md): D1 + TVS across the driver's J1 terminal block, **V+ = 12 V**, 2.5 A.
+For [method A](final-design.md): D1 + TVS across the driver's J1 terminal block, **V+ = 12 V**, 2.5 A.
 
 ## Core parts
 
@@ -14,7 +14,7 @@ For [method A](method-a-d1-tvs.md): D1 + TVS across the driver's J1 terminal blo
 
 Five of each on the semiconductors because they cost well under a dollar and are the parts most likely to be damaged while you find the real ramp limit on the bench.
 
-The fan moved from "nice to have" to "core" when the supply went from 8 V to 12 V — see [Choosing V+](method-a-d1-tvs.md#choosing-v).
+The fan moved from "nice to have" to "core" when the supply went from 8 V to 12 V — see [Choosing V+](final-design.md#choosing-v).
 
 ## Strongly recommended — TVS options for bench tuning
 
@@ -33,7 +33,7 @@ Step 5 of the bring-up is *shorten the ramp until the clamp fires, then back off
 | Item | Manufacturer part number | Qty | Why |
 |---|---|---|---|
 | 1N5408 (3 A, 1000 V rectifier) | **1N5408** (Vishay or onsemi) | 5 | Cheaper, more widely stocked fallback for D1. Slower recovery, but it turns off softly here so it is perfectly adequate |
-| Current-sense shunt, 50 mΩ, 3 W, 1 % | e.g. Vishay **LVR03R0500FE73** | 2 | Only if you want to watch a clamp-assisted decay — I MON cannot see it ([why](imon-and-tvs.md)) |
+| Current-sense shunt, 50 mΩ, 3 W, 1 % | e.g. Vishay **LVR03R0500FE73** | 2 | Only if you want to watch a clamp-assisted decay — I MON cannot see it ([why](reference/clamp-sizing-and-imon.md)) |
 
 ## Paste-ready list
 
@@ -52,7 +52,7 @@ The fan is not in the paste list because the choice is wide open — pick any 40
 ## Before you click order
 
 - **Unidirectional, not bidirectional.** `1.5KE10A` is unidirectional; `1.5KE10**C**A` is bidirectional and would conduct in both directions, shorting the coil in normal operation. The absence of a `C` is the whole difference. Check it on every TVS line.
-- **Several manufacturers share the 1.5KE numbering** (Littelfuse, Vishay, onsemi, SMC). Any is fine — pick one with stock. The packaging suffixes (`-E3/54`, `RL4G`, …) only set lead finish and tape/bulk, not the electrical part. Leakage specs differ slightly between manufacturers; see [imon-and-tvs.md](imon-and-tvs.md).
+- **Several manufacturers share the 1.5KE numbering** (Littelfuse, Vishay, onsemi, SMC). Any is fine — pick one with stock. The packaging suffixes (`-E3/54`, `RL4G`, …) only set lead finish and tape/bulk, not the electrical part. Leakage specs differ slightly between manufacturers; see [clamp-sizing-and-imon.md](reference/clamp-sizing-and-imon.md).
 - **Do not substitute a Schottky for D1.** Schottky leakage reaches tens of mA when hot, and it flows in parallel with the coil, so the coil would receive measurably less current than the driver regulates.
 - **Not on this list:** the **12 V / ≥ 3 A** supply, the function generator for the MOD INPUT ramp, a differential or isolated scope probe for LDC, and the driver heatsink (Wavelength's recommended part is the MULTI-HTSK, bought from them rather than DigiKey). Size the supply for 2.5 A continuous plus the fan — 30 W of dissipation sits in the driver, so a 12 V / 3 A bench supply is the minimum.
 - Part numbers here are manufacturer numbers, not DigiKey stock numbers. Confirm the exact orderable variant and current stock at the time you order.

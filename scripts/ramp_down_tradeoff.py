@@ -4,7 +4,7 @@ Two setpoint shapes, driver assumed to track (rise/fall ~0.8 us):
   linear      i = I0 (1 - t/T)       LDC = V+ - i R + L I0 / T          peak at END of ramp
   exponential i = I0 exp(-t/tau)     LDC = V+ - i (R - L/tau)           peak at START (none if tau >= L/R)
 Heat: P_drv = LDC * i.
-Run: .venv/bin/python scripts/ramp_down_analysis.py -> docs/ramp_down.png, docs/ramp_down_table.md
+Run: .venv/bin/python scripts/ramp_down_tradeoff.py -> figures/ramp-down-tradeoff.png, outputs/ramp-down-table.md
 """
 import numpy as np
 import matplotlib
@@ -44,7 +44,7 @@ for tau in np.array([0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 1.0, 2.0]) * 1e-3:
     tab += (f"| {fmt(tau)} ms | {m['ldc']:.1f} V | {m['p_peak']:.0f} W | {fmt(m['t10'])} ms | {fmt(m['t1'])} ms | {v} |\n")
 tab += (f"\nSteady 2.5 A dissipation {P_SS:.1f} W. The exponential has no overshoot above V+ when τ ≥ L/R = {TAU_CRIT*1e3:.2f} ms. "
         f"Stored coil energy ½·L·I0² = {0.5*L*I0**2*1e3:.2f} mJ.\n")
-open("docs/ramp_down_table.md", "w").write(tab)
+open("outputs/ramp-down-table.md", "w").write(tab)
 print(tab)
 
 # ---- figure --------------------------------------------------------------
@@ -104,4 +104,4 @@ d.plot(t * 1e3, ldc_l, C_LIN, lw=2, label="linear, T = 1 ms"); d.plot(t * 1e3, l
 d.set_ylim(9, 14); refline(d, VP, "V+ = 12 V", x=0.985)
 style(d, "LDC voltage over the same ramps", "time [ms]", "LDC [V]"); d.legend(frameon=False, loc="lower right")
 fig.suptitle("Ramp-down 2.5 A → 0 through MOD INPUT, no D1, V+ = 12 V, L = 0.38 mH, R = 0.99 Ω", x=0.01, ha="left", fontsize=12, fontweight="bold")
-fig.tight_layout(rect=(0, 0, 1, 0.96)); fig.savefig("docs/ramp_down.png", dpi=150)
+fig.tight_layout(rect=(0, 0, 1, 0.96)); fig.savefig("figures/ramp-down-tradeoff.png", dpi=150)

@@ -129,4 +129,4 @@ b.text(168, 2.52,
 
 fig.suptitle("Ramp-down 2.5 A → 0: every method held to the same peak-LDC ceiling "
              "(L = 0.38 mH, R = 0.99 Ω, V+ = 12 V)", x=0.01, ha="left", fontsize=12, fontweight="bold")
-fig.tight_layout(rect=(0, 0, 1, 0.95)); fig.savefig("docs/ramp_speed_options.png", dpi=150)
+fig.tight_layout(rect=(0, 0, 1, 0.95)); fig.savefig("figures/ramp-speed-options.png", dpi=150)

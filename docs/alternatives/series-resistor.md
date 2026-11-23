@@ -1,10 +1,10 @@
 # Method B — series 2 Ω + D1 + TVS
 
-![schematic](series_r_clamp.png)
+![schematic](../../figures/schematic-series-resistor-clamp.png)
 
-Schematic source: [draw_series_r_clamp.py](../scripts/draw_series_r_clamp.py) · [SVG](series_r_clamp.svg) · [numbers](series_r_clamp_output.txt)
-Simulation source: [sim_fastest_safe_ramp.py](../scripts/sim_fastest_safe_ramp.py) · [output](fastest_safe_ramp_output.txt)
-Background on the clamp and the monitor: [imon-and-tvs.md](imon-and-tvs.md). The other candidate: [method A](method-a-d1-tvs.md).
+Schematic source: [draw_series_resistor_clamp.py](../../scripts/draw_series_resistor_clamp.py) · [SVG](../../figures/schematic-series-resistor-clamp.svg) · [numbers](../../outputs/series-resistor-clamp.txt)
+Simulation source: [sim_fastest_safe_ramp.py](../../scripts/sim_fastest_safe_ramp.py) · [output](../../outputs/fastest-safe-ramp.txt)
+Background on the clamp and the monitor: [clamp-sizing-and-imon.md](../reference/clamp-sizing-and-imon.md). The other candidate: [method A](../final-design.md).
 
 **Load (confirmed):** L = 0.38 mH, coil R = 0.19 Ω, cables ≈ 0.8 Ω. With Rs = 2 Ω → R_loop = **2.99 Ω**, τ = **127 µs**. V+ = 12 V, I = 2.5 A.
 
@@ -28,11 +28,11 @@ Rs drops 5 V at 2.5 A on top of the coil and cables, so the load takes 7.48 V in
 | Driver dissipation | **11.3 W** | 45 % of the 25 W no-airflow limit |
 | Rs dissipation | **12.5 W** | Continuous — needs a genuinely heatsinked resistor |
 | Cable / coil dissipation | 5.0 W / 1.2 W | |
-| **Total heat in the system** | **30.0 W** | Against 20.0 W for [method A](method-a-d1-tvs.md) |
+| **Total heat in the system** | **30.0 W** | Against 20.0 W for [method A](../final-design.md) |
 
 ## Fastest safe ramp-down
 
-![simulation](method_b_ramp.png)
+![simulation](../../figures/ramp-sim-series-resistor.png)
 
 Same definition of safe: the driver stays in regulation, the clamp never conducts, I MON stays valid. The usable overshoot is set by the TVS standoff, not by the circuit:
 
@@ -74,14 +74,14 @@ What Rs does buy:
 |---|---|---|
 | Rs | 2 Ω, 50 W aluminium-housed power resistor, **bolted to a heatsink or chassis plate** | 12.5 W continuous. Unheatsinked, a "50 W" part is good for only 10–15 W. Non-inductive preferred; a plain wirewound adds a few µH, under 1 % of 0.38 mH |
 | D1 | MUR460 (4 A, 600 V ultrafast) — or 1N5408 | Silicon, **not Schottky** — Schottky leakage would bypass the coil |
-| TVS | **1.5KE10A**, unidirectional, axial | 8.55 V standoff sets the usable ramp. See [imon-and-tvs.md](imon-and-tvs.md) |
+| TVS | **1.5KE10A**, unidirectional, axial | 8.55 V standoff sets the usable ramp. See [clamp-sizing-and-imon.md](../reference/clamp-sizing-and-imon.md) |
 | — | Barrier terminal block | D1 + TVS across J1:1–J1:2 |
 
 ## Mounting
 
 Put D1 and the TVS in the terminal block **at the driver**, across J1:2 and J1:1 — the clamp has to span LDA–LDC anyway. Rs can then live wherever its heat is convenient.
 
-The trade-off: a cable break between driver and coil leaves the coil without a freewheel path. With only 1.19 mJ stored that is a small arc rather than a hazard, but use locking connectors and never unplug under current. Mounting Rs **and** the clamp together at the coil end restores the protection, at the cost of 12.5 W of heat near the chamber. Unlike [method A](method-a-d1-tvs.md), you cannot simply move the clamp alone.
+The trade-off: a cable break between driver and coil leaves the coil without a freewheel path. With only 1.19 mJ stored that is a small arc rather than a hazard, but use locking connectors and never unplug under current. Mounting Rs **and** the clamp together at the coil end restores the protection, at the cost of 12.5 W of heat near the chamber. Unlike [method A](../final-design.md), you cannot simply move the clamp alone.
 
 ## Bring-up
 

@@ -1,8 +1,8 @@
 # Ways to speed up the ramp-down, compared at a common limit
 
-![options](ramp_speed_options.png)
+![options](../../figures/ramp-speed-options.png)
 
-Script: [ramp_speed_options.py](../scripts/ramp_speed_options.py).
+Script: [ramp_speed_options.py](../../scripts/ramp_speed_options.py).
 Load: **L = 0.38 mH, R = 0.99 Ω (confirmed)**, I0 = 2.5 A, V+ = 12 V. All times are 2.5 A → 10 %.
 
 ## The common limit

@@ -1,7 +1,7 @@
 """Simplest clamp: D1 + TVS across LDA-LDC, no series resistor.
 
-Draws docs/d1_zener.png/.svg and prints operating point, clamp options, mounting options.
-Run: .venv/bin/python scripts/draw_d1_zener.py
+Draws figures/schematic-d1-tvs-clamp.png/.svg and prints operating point, clamp options, mounting options.
+Run: .venv/bin/python scripts/draw_d1_tvs_clamp.py
 """
 import numpy as np
 import schemdraw
@@ -66,6 +66,6 @@ with schemdraw.Drawing(show=False) as d:
         fontsize=9.5)
     d += elm.Label().at((14.6, 0)).label('9.5 V\nat 2.5 A', fontsize=9.5)
 
-d.save('docs/d1_zener.png', dpi=200)
-d.save('docs/d1_zener.svg')
+d.save('figures/schematic-d1-tvs-clamp.png', dpi=200)
+d.save('figures/schematic-d1-tvs-clamp.svg')
 print('\nsaved diagram')

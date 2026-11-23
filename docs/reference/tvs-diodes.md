@@ -2,8 +2,8 @@
 
 Standalone reference for anyone picking up this project who has not worked with transient
 voltage suppressors before. **Nothing here is specific to the MOT coil** — for the sizing
-decisions in this design see [imon-and-tvs.md](imon-and-tvs.md), and for the design itself
-see [design-summary.md](design-summary.md).
+decisions in this design see [clamp-sizing-and-imon.md](clamp-sizing-and-imon.md), and for the design itself
+see [design-summary.md](../design-summary.md).
 
 The aim is that if the chosen part goes obsolete, or someone needs to re-pick it for a
 different coil, they can do it from this document plus a manufacturer datasheet.
@@ -105,7 +105,7 @@ Two derived quantities worth knowing:
 so it conducts in *both* directions above standoff and never blocks. In this design that
 would defeat the whole point: D1's blocking action would be pointless because the TVS itself
 has to be the forward-blocking element in normal operation. **Order `1.5KE10A`, never
-`1.5KE10CA`.** This is called out in [order-list.md](order-list.md) because the part numbers
+`1.5KE10CA`.** This is called out in [order-list.md](../order-list.md) because the part numbers
 differ by one character and sit next to each other in distributor search results.
 
 ## 4. Unidirectional vs bidirectional
@@ -142,7 +142,7 @@ roughly 1500 W × 1 ms ≈ **1.5 J**.
 > current is **2.5 A** against a 100 A rating, **2.5 %**. The TVS is enormously
 > over-specified for the energy, and that is deliberate: it was chosen for its *standoff
 > voltage*, which sets the ramp speed, not for its energy capability. See
-> [imon-and-tvs.md](imon-and-tvs.md) §"Why I MON goes blind".
+> [clamp-sizing-and-imon.md](clamp-sizing-and-imon.md) §"Why I MON goes blind".
 
 This is the usual situation with inductive-kick clamps on small coils. The problem is
 **voltage**, not energy — 1.19 mJ is harmless as heat and destructive as volts into a high
@@ -193,7 +193,7 @@ For clamping an inductive kick on a DC rail, in order:
 > **Step 3 is where this design very nearly failed.** The LD5CHA has **no published maximum
 > LDC voltage** — so there is no number to put in step 2. The 22.9 V clamp is a judgement
 > call anchored to the only nearby published figure, the 28 V compliance at a 30 V supply.
-> This is the largest open question in the project; see [design-summary.md](design-summary.md)
+> This is the largest open question in the project; see [design-summary.md](../design-summary.md)
 > §10.
 
 ## 8. Failure modes
@@ -218,7 +218,7 @@ periodic check that steady-state LDC is still ≈ 9.5 V at 2.5 A would catch a s
 - **Measure V_br before trusting it.** Apply reverse voltage through a current-limiting
   resistor (10 kΩ from a bench supply is plenty) and find the voltage at 1 mA. With ±5 %
   parts and a design this sensitive to standoff, the individual part matters. Buy spares and
-  measure a few — [order-list.md](order-list.md) includes bench-tuning spares for this reason.
+  measure a few — [order-list.md](../order-list.md) includes bench-tuning spares for this reason.
 - **Identify the cathode by the band**, then confirm with a diode-test meter — in series
   cathode-to-cathode, a reversed part gives you a forward-conducting path across the coil,
   which is a quiet and confusing failure.

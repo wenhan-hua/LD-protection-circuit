@@ -1,8 +1,8 @@
 # Ramp-down 2.5 A → 0 through MOD INPUT (original config, no D1, V+ = 12 V)
 
-![ramp-down analysis](ramp_down.png)
+![ramp-down analysis](../../figures/ramp-down-tradeoff.png)
 
-Script: [ramp_down_analysis.py](../scripts/ramp_down_analysis.py). Tables: [ramp_down_table.md](ramp_down_table.md).
+Script: [ramp_down_tradeoff.py](../../scripts/ramp_down_tradeoff.py). Tables: [ramp-down-table.md](../../outputs/ramp-down-table.md).
 
 ## Model
 The setpoint on MOD INPUT (1 A/V, so 2.5 V → 0 V) is ramped and the driver is assumed to track it (its rise or fall time is about 0.8 µs, far faster than these ramps). Values: L = 0.38 mH, R = 0.99 Ω (coil plus cables), V+ = 12 V, I0 = 2.5 A.

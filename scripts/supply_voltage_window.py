@@ -107,5 +107,5 @@ c.legend(frameon=False, fontsize=8.5, loc="upper right")
 fig.suptitle("Method A (D1 + 1.5KE10A): choosing V+ — usable window 6–12.5 V, recommended 8 V "
              "(L = 0.38 mH, R = 0.99 Ω, 2.5 A)", x=0.01, ha="left", fontsize=12, fontweight="bold")
 fig.tight_layout(rect=(0, 0, 1, 0.94))
-fig.savefig("docs/supply_voltage_window.png", dpi=150)
+fig.savefig("figures/supply-voltage-window.png", dpi=150)
 print("\nsaved figure")

@@ -2,23 +2,23 @@
 
 **Original configuration** (no external protection):
 
-![original](direct_drive.png)
+![original](../../figures/schematic-unprotected.png)
 
-Variant with an optional freewheel diode D1: [direct_drive_with_D1.png](direct_drive_with_D1.png)
+Variant with an optional freewheel diode D1: [schematic-diode-only.png](../../figures/schematic-diode-only.png)
 
-Sources: [draw_direct_drive.py](../scripts/draw_direct_drive.py), [sim_direct_drive.py](../scripts/sim_direct_drive.py), [sim output](direct_drive_sim_output.txt)
+Sources: [draw_direct_drive.py](../../scripts/draw_direct_drive.py), [sim_direct_drive.py](../../scripts/sim_direct_drive.py), [sim output](../../outputs/direct-drive-sim.txt)
 
 ## Assumptions
-- Coil L = 0.38 mH, coil R = 0.19 Ω ([coil-estimate.md](coil-estimate.md)); cables add about 0.8 Ω, so R_total ≈ 1.0 Ω and τ ≈ 0.38 ms.
+- Coil L = 0.38 mH, coil R = 0.19 Ω ([coil-measurement.md](../reference/coil-measurement.md)); cables add about 0.8 Ω, so R_total ≈ 1.0 Ω and τ ≈ 0.38 ms.
 - V+ = 12 V, target 3 A. LDA is tied to V+ inside the driver (low-side sink). A heatsink is attached to the driver.
-- The datasheet documents **no internal clamp** across the output and never mentions inductive loads ([datasheet-check.md](datasheet-check.md)). The diagrams show no D1 in the original configuration.
+- The datasheet documents **no internal clamp** across the output and never mentions inductive loads ([driver-datasheet-check.md](../reference/driver-datasheet-check.md)). The diagrams show no D1 in the original configuration.
 
 ## How close is 12 V to the limits?
 | Limit | Value at V+ = 12 V, 3 A | Margin |
 |---|---|---|
 | Supply range (5…30 V) | 12 V | Well inside |
 | Compliance: V+ − 2 V ≥ I·R | 10 V available vs 3.0–3.1 V needed (max current ≈ 10 A, driver limit 5 A) | Large |
-| Driver power dissipation (V+ − I·R)·I | **≈ 27 W** (26.7 W with a hot coil) | Datasheet ([datasheet-check.md](datasheet-check.md)): 25 W with no airflow, **35 W with 5.5 CFM airflow**, both at 25 °C ambient. So 27 W is about 8 % over the no-airflow limit and about 23 % under the airflow limit. |
+| Driver power dissipation (V+ − I·R)·I | **≈ 27 W** (26.7 W with a hot coil) | Datasheet ([driver-datasheet-check.md](../reference/driver-datasheet-check.md)): 25 W with no airflow, **35 W with 5.5 CFM airflow**, both at 25 °C ambient. So 27 W is about 8 % over the no-airflow limit and about 23 % under the airflow limit. |
 | Break-even V+ for 25 W at 3 A | ≈ 11.3–11.6 V | 12 V is just beyond it |
 | LDC at idle (0 A) | 12 V (= V+) | Normal operation |
 

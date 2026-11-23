@@ -35,7 +35,7 @@ as that bound allows.
 
 L and R were first derived from the winding geometry (ID 30 mm → OD 60 mm, 15 mm build,
 100 turns of 16 AWG) by two independent methods that agreed within 2 %, then confirmed on
-the hardware. See [coil-estimate.md](coil-estimate.md).
+the hardware. See [coil-measurement.md](reference/coil-measurement.md).
 
 **The stored energy is tiny.** 1.19 mJ is not a destructive amount of energy — it is a
 destructive amount of *voltage* if delivered into a high impedance. That distinction is
@@ -44,7 +44,7 @@ what makes this a clamp problem rather than an energy-absorption problem, and it
 
 ## 3. The driver's limits
 
-Verified against the [LDxCHA datasheet](https://www.teamwavelength.com/download/Datasheets/LD15CHA.pdf) — see [datasheet-check.md](datasheet-check.md).
+Verified against the [LDxCHA datasheet](https://www.teamwavelength.com/download/Datasheets/LD15CHA.pdf) — see [driver-datasheet-check.md](reference/driver-datasheet-check.md).
 
 | Spec | Value |
 |---|---|
@@ -83,7 +83,7 @@ what a clamp does:
 
 No setpoint shape can beat it; a linear ramp saves its voltage budget for the end, an
 exponential spends it at the start, and the clamp spends it throughout. See
-[ramp-speed-options.md](ramp-speed-options.md).
+[ramp-speed-options.md](analysis/ramp-speed-options.md).
 
 **(c) A series resistor buys no ramp-down speed.** For a commanded linear ramp in
 regulation, LDC(t) = V+ − i·R + L·I₀/T, which peaks at the **end**, where i → 0 and the i·R
@@ -93,7 +93,7 @@ because it eliminated an entire branch of the design space.
 
 ## 5. The design
 
-![schematic](d1_zener.png)
+![schematic](../figures/schematic-d1-tvs-clamp.png)
 
 **Two leaded parts in the driver's J1 terminal block: D1 in series with a TVS, cathode to
 cathode, across J1:2 (LDA) and J1:1 (LDC).** Nothing else in the circuit changes.
@@ -121,7 +121,7 @@ the clamp level.** This is the key structural idea of the design.
 | Clamp threshold | **22.9 V** (faults only) |
 | Headroom clamp → 28 V | 5.1 V |
 
-![supply voltage window](supply_voltage_window.png)
+![supply voltage window](../figures/supply-voltage-window.png)
 
 Three bounds close in from both sides, and **12 V sits at the top of the usable window**:
 
@@ -180,7 +180,7 @@ with a series resistor cannot, because its clamp has to span the resistor.
 
 ## 6. Performance
 
-![method A ramp simulation](method_a_ramp.png)
+![method A ramp simulation](../figures/ramp-sim-d1-tvs.png)
 
 "Safe" means the driver stays in regulation the whole way down, so the clamp never conducts
 and **I MON keeps reading true coil current**. That caps the overshoot at the TVS standoff:
@@ -220,7 +220,7 @@ experiment needs a valid current readback. The resolution: **size the clamp abov
 working ramp**, so the driver stays in regulation and the clamp becomes fault-only
 protection. The cost of a trustworthy monitor is 26 µs.
 
-Detail, including the TVS's three operating regions: [imon-and-tvs.md](imon-and-tvs.md).
+Detail, including the TVS's three operating regions: [clamp-sizing-and-imon.md](reference/clamp-sizing-and-imon.md).
 
 ## 8. Bring-up
 
@@ -244,15 +244,15 @@ Detail, including the TVS's three operating regions: [imon-and-tvs.md](imon-and-
 
 | Option | Best ramp-down | Why not |
 |---|---|---|
-| **Nothing** (as originally wired) | — | LDC excursion unbounded; the driver's output stage is the only thing stopping it. See [direct-drive.md](direct-drive.md) |
+| **Nothing** (as originally wired) | — | LDC excursion unbounded; the driver's output stage is the only thing stopping it. See [unprotected-direct-drive.md](alternatives/unprotected-direct-drive.md) |
 | **D1 alone** (1N5408 across the load) | 403 µs | Safe and nearly free, but it clamps at its own forward drop (0.95 V at 2.5 A), so the decay is essentially L/R. Fine if 0.4 ms is acceptable |
-| **Series 2 Ω + D1 + TVS** | 96 µs | **Identical ramp-down** at the same rail — result (c) in §4. Moves 12.5 W out of the driver, but costs 66 µs of ramp-up, 5 V of compliance margin, a 50 W heatsinked resistor, and the ability to mount the clamp at the coil. A fan achieves the same thermal result more simply. [Full writeup](method-b-series-resistor.md) |
+| **Series 2 Ω + D1 + TVS** | 96 µs | **Identical ramp-down** at the same rail — result (c) in §4. Moves 12.5 W out of the driver, but costs 66 µs of ramp-up, 5 V of compliance margin, a 50 W heatsinked resistor, and the ability to mount the clamp at the coil. A fan achieves the same thermal result more simply. [Full writeup](alternatives/series-resistor.md) |
 | **Clamp-assisted decay** | 70 µs | I MON goes blind — §7 |
 | **Series MOSFET + 100 V TVS** | 8 µs | 80× more inductance was assumed when this was proposed. At 0.38 mH and 1.19 mJ it is a large amount of complexity, isolated gate drive and failure modes for a ramp that two leaded parts already deliver. Also note I MON is blind here too — the driver is switched out of the loop |
 | **Fewer turns at higher current** (half the turns, 5 A) | 38 µs | Requires rewinding the coil, and 5 A is the driver's absolute maximum — no headroom left |
 
-The full comparison at a common LDC ceiling is in [ramp-speed-options.md](ramp-speed-options.md);
-the A-vs-B decision is in [final-comparison.md](final-comparison.md).
+The full comparison at a common LDC ceiling is in [ramp-speed-options.md](analysis/ramp-speed-options.md);
+the A-vs-B decision is in [method-comparison.md](alternatives/method-comparison.md).
 
 ## 10. Known unknowns
 
@@ -280,16 +280,16 @@ or on a model rather than a measurement.
 | Document | Contents |
 |---|---|
 | [order-list.md](order-list.md) | DigiKey BOM, bench-tuning spares, ordering traps |
-| [method-a-d1-tvs.md](method-a-d1-tvs.md) | This design in full detail |
-| [method-b-series-resistor.md](method-b-series-resistor.md) | The series-resistor alternative |
-| [final-comparison.md](final-comparison.md) | A vs B decision table |
-| [imon-and-tvs.md](imon-and-tvs.md) | How a TVS works; I MON reference; clamp sizing |
-| [tvs-background.md](tvs-background.md) | TVS background knowledge: parameters, part numbering, selection, failure modes |
-| [coil-estimate.md](coil-estimate.md) | L and R from geometry, two methods |
-| [datasheet-check.md](datasheet-check.md) | Every spec verified against Wavelength's datasheet |
-| [direct-drive.md](direct-drive.md) | The original unprotected configuration |
-| [ramp-down-analysis.md](ramp-down-analysis.md) | Ramp timescale vs peak voltage and heat |
-| [ramp-speed-options.md](ramp-speed-options.md) | Every option at a common LDC ceiling |
+| [final-design.md](final-design.md) | This design in full detail |
+| [series-resistor.md](alternatives/series-resistor.md) | The series-resistor alternative |
+| [method-comparison.md](alternatives/method-comparison.md) | A vs B decision table |
+| [clamp-sizing-and-imon.md](reference/clamp-sizing-and-imon.md) | How a TVS works; I MON reference; clamp sizing |
+| [tvs-diodes.md](reference/tvs-diodes.md) | TVS background knowledge: parameters, part numbering, selection, failure modes |
+| [coil-measurement.md](reference/coil-measurement.md) | L and R from geometry, two methods |
+| [driver-datasheet-check.md](reference/driver-datasheet-check.md) | Every spec verified against Wavelength's datasheet |
+| [unprotected-direct-drive.md](alternatives/unprotected-direct-drive.md) | The original unprotected configuration |
+| [ramp-down-tradeoff.md](analysis/ramp-down-tradeoff.md) | Ramp timescale vs peak voltage and heat |
+| [ramp-speed-options.md](analysis/ramp-speed-options.md) | Every option at a common LDC ceiling |
 
 All figures regenerate with `.venv/bin/python scripts/<script>.py`; see the
 [README](../README.md).

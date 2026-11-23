@@ -2,10 +2,10 @@
 
 Each method is written up on its own, with its own schematic, numbers, simulation and bring-up:
 
-- **[Method A — D1 + TVS, no series resistor](method-a-d1-tvs.md)** (V+ = 12 V)
-- **[Method B — series 2 Ω + D1 + TVS](method-b-series-resistor.md)** (V+ = 12 V)
+- **[Method A — D1 + TVS, no series resistor](../final-design.md)** (V+ = 12 V)
+- **[Method B — series 2 Ω + D1 + TVS](series-resistor.md)** (V+ = 12 V)
 
-Shared background: [I MON and the TVS](imon-and-tvs.md). Both use a 1.5KE10A and a commanded 106 µs linear ramp.
+Shared background: [I MON and the TVS](../reference/clamp-sizing-and-imon.md). Both use a 1.5KE10A and a commanded 106 µs linear ramp.
 
 Both compared at the **same V+ = 12 V**, same TVS, same commanded ramp — otherwise the comparison measures the rail, not the method.
 

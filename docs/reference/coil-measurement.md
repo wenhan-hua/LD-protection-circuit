@@ -1,6 +1,6 @@
 # MOT coil inductance and resistance estimate
 
-Script: [scripts/coil_estimate.py](../scripts/coil_estimate.py) · raw output: [coil_estimate_output.txt](coil_estimate_output.txt)
+Script: [coil_estimate.py](../../scripts/coil_estimate.py) · raw output: [coil-estimate.txt](../../outputs/coil-estimate.txt)
 
 ## Inputs
 

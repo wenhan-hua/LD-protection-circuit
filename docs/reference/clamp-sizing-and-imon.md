@@ -1,7 +1,7 @@
 # I MON, and what the TVS actually does
 
-Script: [imon_valid_sizing.py](../scripts/imon_valid_sizing.py) · [output](imon_valid_output.txt).
-Shared background for [method A](method-a-d1-tvs.md) and [method B](method-b-series-resistor.md).
+Script: [imon_valid_sizing.py](../../scripts/imon_valid_sizing.py) · [output](../../outputs/imon-valid-sizing.txt).
+Shared background for [method A](../final-design.md) and [method B](../alternatives/series-resistor.md).
 
 ## I MON reference
 
@@ -18,7 +18,7 @@ Note the ±32 mA: that is the monitor's own error against the transfer function,
 ## What the TVS is doing
 
 > For the device physics, parameter definitions, part-number decoding, selection procedure and failure
-> modes — none of it specific to this coil — see **[tvs-background.md](tvs-background.md)**.
+> modes — none of it specific to this coil — see **[tvs-diodes.md](tvs-diodes.md)**.
 > This section covers only what the TVS does *in this circuit*.
 
 A TVS (transient voltage suppressor) is a zener diode built for short, high-current pulses. It has three regions:
