@@ -1,5 +1,8 @@
 # Alternative: D1 + TVS only (no series resistor)
 
+> **Read [imon-and-tvs.md](imon-and-tvs.md) first if you need I MON to read true current.** Once the clamp conducts, the coil current bypasses the driver and I MON reads ~0. That document resizes the clamp so it fires only on faults.
+
+
 ![schematic](d1_zener.png)
 
 Sources: [draw_d1_zener.py](../scripts/draw_d1_zener.py) · [SVG](d1_zener.svg) · [computed output](d1_zener_output.txt)

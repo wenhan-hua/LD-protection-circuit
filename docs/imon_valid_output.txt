@@ -1,0 +1,17 @@
+Working ramp kept below the TVS standoff, so the clamp stays off and I MON stays true.
+
+TVS          usable dV   ramp T  t to 10%  peak LDC @8V    @12V  fault clamp @8V  leak err
+1.5KE6.8A        6.2 V    153 us     138 us        14.2 V   18.2 V           15.8 V     400 ppm
+1.5KE10A         9.0 V    106 us      96 us        17.0 V   21.0 V           18.9 V       2 ppm
+1.5KE15A        13.2 V     72 us      65 us        21.2 V   25.2 V           23.9 V       0 ppm
+1.5KE18A        15.7 V     61 us      54 us        23.7 V   27.7 V           26.9 V       0 ppm
+
+For comparison, letting the clamp do the work (I MON blind during the decay):
+  1.5KE6.8A   clamp   7.8 V ->   94 us, peak LDC @8V = 15.8 V
+  1.5KE10A    clamp  10.9 V ->   70 us, peak LDC @8V = 18.9 V
+  1.5KE15A    clamp  15.9 V ->   49 us, peak LDC @8V = 23.9 V
+  1.5KE18A    clamp  18.9 V ->   42 us, peak LDC @8V = 26.9 V
+
+Thermal reminder (no series resistor):
+  V+ =  8 V: LDC steady 5.53 V, driver 13.8 W (55 % of the 25 W no-airflow limit)
+  V+ = 12 V: LDC steady 9.53 V, driver 23.8 W (95 % of the 25 W no-airflow limit)

@@ -1,5 +1,8 @@
 # Chosen design: series 2 Ω + D1 + TVS clamp
 
+> **Read [imon-and-tvs.md](imon-and-tvs.md) first if you need I MON to read true current.** Once the clamp conducts, the coil current bypasses the driver and I MON reads ~0. That document resizes the clamp so it fires only on faults.
+
+
 ![schematic](series_r_clamp.png)
 
 Sources: [draw_series_r_clamp.py](../scripts/draw_series_r_clamp.py) · [SVG](series_r_clamp.svg) · [computed output](series_r_clamp_output.txt)
