@@ -1,0 +1,20 @@
+R_loop = 0.99 ohm   tau = 384 us   stored energy = 1.19 mJ
+
+   V+  LDC steady  driver P  % of 25 W   ramp-up 0->2.5 A
+   6 V      3.52 V     8.8 W       35 %             370 us
+   7 V      4.53 V    11.3 W       45 %             262 us
+   8 V      5.53 V    13.8 W       55 %             204 us
+  10 V      7.53 V    18.8 W       75 %             142 us
+  12 V      9.53 V    23.8 W       95 %             109 us
+
+clamp part              V at 2.5 A  peak LDC (V+=12)  t to 10%
+none (D1 only)               0.9 V            12.9 V     403 us
+1.5KE6.8A                    7.9 V            19.9 V      93 us
+1.5KE10A                    11.1 V            23.1 V      69 us
+1.5KE15A                    16.2 V            28.2 V      49 us
+
+mounting (peak LDC is the same either way; only the loop resistance differs)
+  at driver terminals (cables in loop)   R_loop 0.99 ohm -> D1 only  403 us, with 1.5KE6.8A   93 us
+  at coil terminals (cables out)         R_loop 0.19 ohm -> D1 only  713 us, with 1.5KE6.8A  105 us
+
+saved diagram

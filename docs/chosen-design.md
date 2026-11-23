@@ -3,6 +3,7 @@
 ![schematic](series_r_clamp.png)
 
 Sources: [draw_series_r_clamp.py](../scripts/draw_series_r_clamp.py) · [SVG](series_r_clamp.svg) · [computed output](series_r_clamp_output.txt)
+Simpler sibling without the resistor: [alt-design-d1-zener.md](alt-design-d1-zener.md).
 Load: L = 0.38 mH, coil R = 0.19 Ω, cables ≈ 0.8 Ω (confirmed). V+ = 12 V, I = 2.5 A.
 
 ## How it works
