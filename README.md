@@ -4,8 +4,12 @@ Protecting a Wavelength **LD5CHA** laser-diode driver while it drives a **3D MOT
 
 **Load (confirmed):** L = 0.38 mH, coil R = 0.19 Ω, cables ≈ 0.8 Ω. Operating current 2.5 A.
 
+**Final design:** D1 + 1.5KE10A TVS in series, cathode to cathode, across LDA–LDC. V+ = 12 V.
+Ramp-down **96 µs** with I MON valid; clamp holds faults at 22.9 V.
+
 ## Start here
 
+- **[docs/design-summary.md](docs/design-summary.md)** — ⭐ **the whole design in one document**
 - **[docs/final-comparison.md](docs/final-comparison.md)** — the decision between the two candidate designs
 - **[docs/method-a-d1-tvs.md](docs/method-a-d1-tvs.md)** — Method A: D1 + TVS, no series resistor *(recommended)*
 - **[docs/method-b-series-resistor.md](docs/method-b-series-resistor.md)** — Method B: series 2 Ω + D1 + TVS
