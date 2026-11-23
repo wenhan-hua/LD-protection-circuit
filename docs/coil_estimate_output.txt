@@ -1,0 +1,22 @@
+radial build c = 15.0 mm, height b = 15.0 mm, mean radius a = 22.5 mm
+winding window area = 225 mm^2; copper area = 131 mm^2; fill = 58 %
+turns that fit at 1.35 mm pitch: 11 radial x 11 axial = 121 (need 100)
+
+wire length = 14.14 m, area = 1.309 mm^2
+R(20C) = 186 mOhm  (check: 13.17 mOhm/m x 14.14 m = 186 mOhm)
+R(40C) = 201 mOhm
+R(60C) = 215 mOhm
+R(80C) = 230 mOhm
+mass of copper = 166 g
+
+Wheeler: L = 380 uH
+
+Filament sum, tight pack 10x10 @1.35 mm: L = 388 uH, wire length = 13.67 m, R20 = 180 mOhm
+Filament sum, fill window 10x10 @1.5 mm : L = 383 uH, wire length = 14.14 m, R20 = 186 mOhm
+
+--- consequences (single coil) ---
+tau = L/R = 2.06 ms
+I = 3 A: V_R = 0.56 V, P = 1.68 W, E = 1.72 mJ, ampere-turns = 300
+I = 5 A: V_R = 0.93 V, P = 4.65 W, E = 4.79 mJ, ampere-turns = 500
+voltage to ramp 3 A -> 0 in 1 ms: L*di/dt = 1.15 V
+turns needed for 30 mH (L ~ N^2): N = 885
