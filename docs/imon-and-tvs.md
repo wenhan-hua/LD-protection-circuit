@@ -17,6 +17,10 @@ Note the ±32 mA: that is the monitor's own error against the transfer function,
 
 ## What the TVS is doing
 
+> For the device physics, parameter definitions, part-number decoding, selection procedure and failure
+> modes — none of it specific to this coil — see **[tvs-background.md](tvs-background.md)**.
+> This section covers only what the TVS does *in this circuit*.
+
 A TVS (transient voltage suppressor) is a zener diode built for short, high-current pulses. It has three regions:
 
 - **Below its standoff voltage V_wm** — effectively an open circuit, leakage only.

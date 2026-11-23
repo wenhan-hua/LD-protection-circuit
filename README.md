@@ -18,6 +18,7 @@ Ramp-down **96 µs** with I MON valid; clamp holds faults at 22.9 V.
 
 ## Background and analysis
 
+- [docs/tvs-background.md](docs/tvs-background.md) — TVS diodes from first principles: parameters, part numbering, selection, failure modes
 - [docs/coil-estimate.md](docs/coil-estimate.md) — coil L and R derived from geometry, since confirmed
 - [docs/datasheet-check.md](docs/datasheet-check.md) — LD5CHA specs verified against the Wavelength datasheet
 - [docs/direct-drive.md](docs/direct-drive.md) — the original unprotected configuration, and why it needs a clamp

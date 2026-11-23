@@ -284,6 +284,7 @@ or on a model rather than a measurement.
 | [method-b-series-resistor.md](method-b-series-resistor.md) | The series-resistor alternative |
 | [final-comparison.md](final-comparison.md) | A vs B decision table |
 | [imon-and-tvs.md](imon-and-tvs.md) | How a TVS works; I MON reference; clamp sizing |
+| [tvs-background.md](tvs-background.md) | TVS background knowledge: parameters, part numbering, selection, failure modes |
 | [coil-estimate.md](coil-estimate.md) | L and R from geometry, two methods |
 | [datasheet-check.md](datasheet-check.md) | Every spec verified against Wavelength's datasheet |
 | [direct-drive.md](direct-drive.md) | The original unprotected configuration |
