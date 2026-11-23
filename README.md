@@ -9,6 +9,7 @@ Protecting a Wavelength **LD5CHA** laser-diode driver while it drives a **3D MOT
 - **[docs/final-comparison.md](docs/final-comparison.md)** — the decision between the two candidate designs
 - **[docs/method-a-d1-tvs.md](docs/method-a-d1-tvs.md)** — Method A: D1 + TVS, no series resistor *(recommended)*
 - **[docs/method-b-series-resistor.md](docs/method-b-series-resistor.md)** — Method B: series 2 Ω + D1 + TVS
+- **[docs/order-list.md](docs/order-list.md)** — DigiKey order list for method A
 - **[docs/imon-and-tvs.md](docs/imon-and-tvs.md)** — what the TVS does, I MON reference, and sizing the clamp so I MON stays valid
 
 ## Background and analysis

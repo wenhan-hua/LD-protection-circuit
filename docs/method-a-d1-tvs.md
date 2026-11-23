@@ -17,19 +17,35 @@ Two leaded parts in the driver's J1 terminal block: **D1 in series with a TVS, c
 
 In the intended operating mode the clamp **never conducts** — it is fault protection only, and the ramp is done by the setpoint so that I MON stays valid.
 
-## Supply voltage
+## Choosing V+
 
-Without a series resistor the load only drops 2.48 V at 2.5 A, so the driver absorbs the rest:
+![supply voltage window](supply_voltage_window.png)
 
-| V+ | LDC steady | Driver dissipation | % of the 25 W no-airflow limit | Ramp-up 0 → 2.5 A |
-|---|---|---|---|---|
-| 6 V | 3.52 V | 8.8 W | 35 % | 370 µs |
-| 7 V | 4.53 V | 11.3 W | 45 % | 262 µs |
-| **8 V** | **5.53 V** | **13.8 W** | **55 %** | **204 µs** |
-| 10 V | 7.53 V | 18.8 W | 75 % | 142 µs |
-| 12 V | 9.53 V | 23.8 W | 95 % | 109 µs |
+Source: [supply_voltage_window.py](../scripts/supply_voltage_window.py) · [output](supply_voltage_output.txt)
 
-**V+ = 8 V is the recommended point.** It keeps the driver at 55 % of its rating with margin for a warm room, leaves 3.5 V above the 2 V compliance floor, and keeps peak LDC low because every LDC excursion is stacked on V+. Running at 12 V puts the driver at 95 % with no margin.
+Without a series resistor the load only drops 2.48 V at 2.5 A, so the driver absorbs everything else. Three constraints bracket the supply:
+
+| V+ | LDC steady | Margin | Driver P | % of 25 W | Ramp-up | **Ramp-down** | LDC peak | Clamp fires | Verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| 5 V | 2.52 V | 0.52 V | 6.3 W | 25 % | 669 µs | 96 µs | 14.0 V | 15.9 V | no compliance margin |
+| 6 V | 3.52 V | 1.52 V | 8.8 W | 35 % | 370 µs | 96 µs | 15.0 V | 16.9 V | ok, slow ramp-up |
+| 7 V | 4.53 V | 2.53 V | 11.3 W | 45 % | 262 µs | 96 µs | 16.0 V | 17.9 V | ok |
+| **8 V** | **5.53 V** | **3.53 V** | **13.8 W** | **55 %** | **204 µs** | **96 µs** | **17.0 V** | **18.9 V** | **recommended** |
+| 9 V | 6.53 V | 4.53 V | 16.3 W | 65 % | 167 µs | 96 µs | 18.0 V | 19.9 V | ok |
+| 10 V | 7.53 V | 5.53 V | 18.8 W | 75 % | 142 µs | 96 µs | 19.0 V | 20.9 V | ok |
+| 12 V | 9.53 V | 7.53 V | 23.8 W | 95 % | 109 µs | 96 µs | 21.0 V | 22.9 V | no thermal margin |
+| 14 V | 11.53 V | 9.53 V | 28.8 W | 115 % | 89 µs | 96 µs | 23.0 V | 24.9 V | needs forced airflow |
+| 16 V | 13.53 V | 11.53 V | 33.8 W | 135 % | 75 µs | 96 µs | 25.0 V | 26.9 V | needs forced airflow |
+
+**Ramp-down is 96 µs at every supply voltage.** It is set by the TVS standoff and L·I₀, not by the rail — the right-hand panel of the figure makes this explicit. V+ buys ramp-**up** speed only, and pays for it in heat and LDC stress.
+
+### The three bounds
+
+- **Lower, compliance:** LDC must stay above 2 V. The hard floor is V+ ≥ 4.47 V, but at 5 V there is only 0.5 V of margin — a warm coil or a sagging supply pushes the driver out of regulation. Keep V+ ≥ 6 V.
+- **Upper, heat:** the driver hits 25 W at V+ = 12.5 V and 35 W at 16.5 V. Without forced air, stay below ~12 V; 8 V leaves real margin.
+- **Upper, LDC stress:** every LDC excursion is stacked on V+. At 16 V the clamp would fire at 26.9 V, within sight of the 28 V maximum compliance figure.
+
+**V+ = 8 V sits in the middle of all three:** 55 % of the thermal limit, 3.5 V of compliance margin, 17 V peak LDC, and 204 µs ramp-up. If your experiment needs a faster ramp-**up**, 10 V is still comfortable at 75 % and 142 µs.
 
 ## Fastest safe ramp-down
 

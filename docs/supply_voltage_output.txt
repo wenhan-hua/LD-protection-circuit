@@ -1,0 +1,15 @@
+ramp-down is 96 us at EVERY V+ (set by the 1.5KE10A standoff, not the rail)
+hard compliance floor V+ >= 4.47 V | 25 W at V+ = 12.47 V | 35 W at V+ = 16.48 V
+
+   V+  LDC steady   margin  driver P  % 25W   ramp-up  ramp-dn   LDC pk   clamp                   verdict
+   5 V      2.52 V   0.52 V     6.3 W    25%     669 us     96 us   14.0 V  15.9 V      no compliance margin
+   6 V      3.52 V   1.52 V     8.8 W    35%     370 us     96 us   15.0 V  16.9 V                        ok
+   7 V      4.53 V   2.53 V    11.3 W    45%     262 us     96 us   16.0 V  17.9 V                        ok
+   8 V      5.53 V   3.53 V    13.8 W    55%     204 us     96 us   17.0 V  18.9 V                        ok
+   9 V      6.53 V   4.53 V    16.3 W    65%     167 us     96 us   18.0 V  19.9 V                        ok
+  10 V      7.53 V   5.53 V    18.8 W    75%     142 us     96 us   19.0 V  20.9 V                        ok
+  12 V      9.53 V   7.53 V    23.8 W    95%     109 us     96 us   21.0 V  22.9 V                        ok
+  14 V     11.53 V   9.53 V    28.8 W   115%      89 us     96 us   23.0 V  24.9 V      needs forced airflow
+  16 V     13.53 V  11.53 V    33.8 W   135%      75 us     96 us   25.0 V  26.9 V      needs forced airflow
+
+saved figure
