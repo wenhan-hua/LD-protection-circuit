@@ -1,0 +1,7 @@
+usable overshoot dV = 8.95 V   commanded ramp T = 106 us   t to 10% = 96 us   (same for both designs)
+
+design               LDC steady   margin  driver P   Rs P  peak LDC  clamp at   peak P   avg P   ramp-up  clamp-assisted
+A  D1 + TVS              5.53 V   3.53 V    13.8 W  0.0 W    17.0 V    18.9 V     36 W    19 W    204 us           70 us
+B  2 Ω + D1 + TVS        4.52 V   2.52 V    11.3 W 12.5 W    21.0 V    22.9 V     34 W    20 W    175 us           58 us
+
+saved figure

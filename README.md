@@ -14,3 +14,4 @@ Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
 - [docs/chosen-design.md](docs/chosen-design.md): **chosen design** — series 2 Ω + D1 + TVS clamp
 - [docs/alt-design-d1-zener.md](docs/alt-design-d1-zener.md): simpler alternative — D1 + TVS only, no series resistor
 - [docs/imon-and-tvs.md](docs/imon-and-tvs.md): what the TVS does, and sizing it so I MON stays valid
+- [docs/final-comparison.md](docs/final-comparison.md): **A vs B compared**, with a simulation of the fastest safe ramp
