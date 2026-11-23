@@ -1,22 +1,17 @@
-chardet==5.2.0
-charset-normalizer==3.5.2
-contourpy==1.3.0
-cycler==0.12.1
-fonttools==4.60.2
-importlib_resources==6.5.2
-kiwisolver==1.4.7
-matplotlib==3.9.4
-numpy==2.0.2
-packaging==26.3
-pillow==11.3.0
-PyMuPDF==1.26.5
-pyparsing==3.3.3
-pypdf==6.21.4
-python-dateutil==3.0.0
-reportlab==4.2.5
-schemdraw==0.23
-scipy==1.13.1
-six==1.17.0
-typing_extensions==4.16.0
-tzdata==2026.6
-zipp==3.23.1
+# Direct dependencies only. Transitive packages (contourpy, fonttools, pillow,
+# pyparsing, dateutil, …) are resolved by pip and deliberately not pinned here.
+#
+# These are minimum floors, not exact pins. The previous version of this file was
+# a `pip freeze` with exact pins; on Python 3.13+ none of those releases have
+# prebuilt wheels, so pip fell back to building numpy and scipy from source and
+# effectively never finished. Floors let pip pick a release that has a wheel for
+# whatever interpreter you are on, while still refusing versions too old for the
+# APIs these scripts use. Upper bounds guard against the next major API break.
+#
+# Verified on Python 3.14.3 (resolves to matplotlib 3.11.2, numpy 2.5.5,
+# scipy 1.18.1, schemdraw 0.23) and compatible back to Python 3.9.
+
+matplotlib>=3.5,<4        # pyplot; all figures
+numpy>=1.22,<3            # array maths throughout
+scipy>=1.8,<2             # special.ellipk/ellipe (coil L), integrate.solve_ivp (sim)
+schemdraw>=0.19,<1        # the two circuit schematics
