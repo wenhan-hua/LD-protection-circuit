@@ -36,7 +36,7 @@ def ramp_down(vplus):
 print(f"L = {L*1e3:.2f} mH, R = {R:.2f} ohm, tau = {L/R*1e3:.2f} ms")
 print(f"Ramp-down 3 A -> 0 through D1 only: {ramp_down(0)[1]*1e3:.2f} ms ; "
       f"LDC peak = V+ + Vf({I_SET} A) = V+ + {vf(I_SET):.1f} V")
-for vp in (5, 6, 8, 10):
+for vp in (5, 6, 8, 10, 12):
     ok = (vp - V_COMPL) / R >= I_SET
     pd = (vp - I_SET * R) * I_SET
     t = ramp_up(vp) if ok else float('nan')

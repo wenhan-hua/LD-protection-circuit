@@ -4,3 +4,4 @@ V+ =  5 V: I_max = 3.03 A, ramp-up to 3 A = 1.77 ms, driver dissipation = 6.1 W,
 V+ =  6 V: I_max = 4.04 A, ramp-up to 3 A = 0.52 ms, driver dissipation = 9.1 W, LDC peak at turn-off = 7.0 V
 V+ =  8 V: I_max = 6.06 A, ramp-up to 3 A = 0.26 ms, driver dissipation = 15.1 W, LDC peak at turn-off = 9.0 V
 V+ = 10 V: I_max = 8.08 A, ramp-up to 3 A = 0.18 ms, driver dissipation = 21.1 W, LDC peak at turn-off = 11.0 V
+V+ = 12 V: I_max = 10.10 A, ramp-up to 3 A = 0.14 ms, driver dissipation = 27.1 W, LDC peak at turn-off = 13.0 V

@@ -1,47 +1,54 @@
-# Preliminary: LD5CHA driving the coil directly (rev 2)
+# LD5CHA driving the coil directly (rev 3, V+ = 12 V)
 
-![schematic](direct_drive.png)
+**Original configuration** (no external protection):
 
-Sources: [draw_direct_drive.py](../scripts/draw_direct_drive.py) (SVG: [direct_drive.svg](direct_drive.svg)), [sim_direct_drive.py](../scripts/sim_direct_drive.py), [sim output](direct_drive_sim_output.txt), ![sim](direct_drive_sim.png)
+![original](direct_drive.png)
 
-## Assumptions (rev 2)
-- Coil **L = 0.38 mH**, coil R = 0.19 Ω ([coil-estimate.md](coil-estimate.md)).
-- Cables and connections add about **0.8 Ω**, so the total is **R ≈ 1.0 Ω** (the sim uses 0.99 Ω), τ = L/R ≈ 0.38 ms.
-- Target **3 A**. LDA is tied to V+ inside the driver, so the driver is a low-side sink.
-- **LDC voltage limit set to 12 V** for driver safety (a design choice, since the datasheet value is unknown).
+Variant with an optional freewheel diode D1: [direct_drive_with_D1.png](direct_drive_with_D1.png)
 
-## LDC voltage budget
-In normal operation LDC sits between about 2 V (compliance floor) and V+, which is the driver's designed range. The only excursion above V+ happens at turn-off, when the coil pushes LDC up until the clamp conducts.
+Sources: [draw_direct_drive.py](../scripts/draw_direct_drive.py), [sim_direct_drive.py](../scripts/sim_direct_drive.py), [sim output](direct_drive_sim_output.txt)
 
-| Range | Value | Comment |
+## Assumptions
+- Coil L = 0.38 mH, coil R = 0.19 Ω ([coil-estimate.md](coil-estimate.md)); cables add about 0.8 Ω, so R_total ≈ 1.0 Ω and τ ≈ 0.38 ms.
+- V+ = 12 V, target 3 A. LDA is tied to V+ inside the driver (low-side sink). A heatsink is attached to the driver.
+- Whether the LD5CHA has an internal clamp across its output is **not verified**. The diagrams show no D1 in the original configuration.
+
+## How close is 12 V to the limits?
+| Limit | Value at V+ = 12 V, 3 A | Margin |
 |---|---|---|
-| Normal operation | 2 V … V+ | Designed range for this driver |
-| Peak with D1 only | V+ + Vf ≈ V+ + 1.0 V (1N5408 at 3 A) | Sub-ms pulse, 1 V above the rail |
-| Your limit | 12 V | Allows V+ up to about 10–11 V |
-| Beyond that | Unknown | The datasheet may allow up to the 30 V supply limit, but this is unconfirmed. Ask Wavelength. |
+| Supply range (5…30 V) | 12 V | Well inside |
+| Compliance: V+ − 2 V ≥ I·R | 10 V available vs 3.0–3.1 V needed (max current ≈ 10 A, driver limit 5 A) | Large |
+| Driver power dissipation (V+ − I·R)·I | **≈ 27 W** (26.7 W with a hot coil) | **About 8 % above the 25 W figure, which is the datasheet number with no airflow at 25 °C.** The heatsink raises the real limit, but by an unknown amount. |
+| Break-even V+ for 25 W at 3 A | ≈ 11.3–11.6 V | 12 V is just beyond it |
+| LDC at idle (0 A) | 12 V (= V+) | Normal operation |
 
-The earlier TVS (1.5KE12A) is **dropped**. It would raise LDC to V+ + 14 V or more, which breaks the 12 V limit. Even with a 6.8 V TVS, LDC would reach about V+ + 8 V. D1 alone keeps the excursion to 1 V.
+**Dissipation is the only real constraint.** It is within reach of a heatsink, but the 25 W number isn't a heatsinked rating. Things to do:
+- Run the Wavelength SOA calculator with the actual heatsink and ambient temperature.
+- Watch the driver case temperature during the first minutes at 3 A.
+- If the coil runs below 3 A or pulsed, the dissipation drops. At 2.5 A it is about 24 W, and it is lower still at low duty cycle.
+- If the case runs hot, dropping V+ to 11 V gives about 24 W at 3 A.
 
-## Result (simulated, constant-drop D1 model; see the script)
-- **Ramp-down 3 A → 0 through D1:** about **0.60 ms**, which already meets the "≈ 1 ms" goal.
-- **Ramp-up to 3 A with the driver saturated:**
+## Turn-off behaviour without D1
+Stored energy at 3 A is only ½·L·I² = 1.7 mJ. What matters is how the current is interrupted:
+- **Controlled ramp by the setpoint** (driver stays in regulation): LDC = V+ − I·R − L·di/dt. For a linear 3 A → 0 ramp in 1 ms the final overshoot is L·di/dt = 0.38 mH × 3 A/ms ≈ **1.1 V above V+**, with no clamp needed. A 0.5 ms ramp gives about 2.3 V. This is my own estimate and assumes the loop tracks the setpoint.
+- **Abrupt interruption** (enable off, fault trip, 5 V logic loss, unplugging): the sink transistor stops conducting and LDC flies up (for example 3 A in 10 µs gives about 114 V) until the transistor avalanches or an internal clamp, if any, conducts. This is the case D1 covers.
+- With D1: LDC peaks at V+ + Vf ≈ **13 V** and the current decays through D1 and the circuit resistance in about **0.6 ms**.
 
-| V+ | Max current | Ramp-up to 3 A | Driver dissipation at 3 A | LDC peak at turn-off |
-|---|---|---|---|---|
-| 5 V | 3.03 A (no margin) | 1.77 ms | 6.1 W | 6.0 V |
-| **6 V (chosen)** | 4.04 A | 0.52 ms | 9.1 W | 7.0 V |
-| 8 V | 6.06 A | 0.26 ms | 15.1 W | 9.0 V |
-| 10 V | 8.08 A | 0.18 ms | 21.1 W (near the 25 W limit) | 11.0 V |
+So D1 is inexpensive insurance against abrupt interruption. It does not affect normal operation, and it is optional if you only ever ramp by the setpoint.
 
-**Recommendation: V+ = 6 V.** It has 1 V of headroom for a hot coil (R rises about 0.04 Ω), LDC stays at 7 V or below, and the driver dissipates only about 9 W.
+## Simulated response, V+ = 12 V
+- Ramp-up to 3 A with the driver saturated: **≈ 0.14 ms** (headroom is plentiful). The driver's control loop will limit it in practice.
+- Ramp-down: with D1, about 0.6 ms. This is independent of V+. Higher V+ speeds up ramp-up only, and ramp-down speed is set by the clamp voltage (a series zener on D1 would speed it up).
 
-## Parts
-- D1: 1N5408 (3 A, 1000 V) or any rectifier rated at least 5 A. Mount it at the coil terminals. A silicon diode is better than a Schottky, whose leakage would be read as load current.
-- No TVS, resistor or capacitor is needed for the 0.6 ms ramp-down.
+| V+ | Ramp-up to 3 A | Driver dissipation at 3 A |
+|---|---|---|
+| 6 V | 0.52 ms | 9.1 W |
+| 8 V | 0.26 ms | 15.1 W |
+| 10 V | 0.18 ms | 21.1 W |
+| 12 V | 0.14 ms | 27.1 W |
 
 ## Open items
-- Confirm L (0.38 mH) with an LCR meter. If it is much larger, the ramp-down gets proportionally slower.
-- The 1N5408 forward-drop model is approximate (0.7 V + 0.1 V/A). Check with the datasheet curve.
-- Check LDC with a scope at the first power-up for oscillation (an inductive load, with the driver compensated for diode loads).
-- Total R of about 1 Ω assumes the cables account for the extra 0.8 Ω. The earlier whole-circuit reading was about 2 Ω, so re-measure.
-- Ask Wavelength for the maximum voltage allowed on LDC and whether a brief excursion above V+ is acceptable.
+- Verify the driver's real thermal limit with the heatsink (SOA calculator and a temperature measurement).
+- Confirm L and the total R with an LCR meter (the earlier whole-circuit reading was about 2 Ω).
+- Decide whether to fit D1 and a series zener.
+- Check LDC with a scope at the first power-up for oscillation.
