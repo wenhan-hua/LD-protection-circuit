@@ -11,18 +11,18 @@ Sources: [draw_direct_drive.py](../scripts/draw_direct_drive.py), [sim_direct_dr
 ## Assumptions
 - Coil L = 0.38 mH, coil R = 0.19 Ω ([coil-estimate.md](coil-estimate.md)); cables add about 0.8 Ω, so R_total ≈ 1.0 Ω and τ ≈ 0.38 ms.
 - V+ = 12 V, target 3 A. LDA is tied to V+ inside the driver (low-side sink). A heatsink is attached to the driver.
-- Whether the LD5CHA has an internal clamp across its output is **not verified**. The diagrams show no D1 in the original configuration.
+- The datasheet documents **no internal clamp** across the output and never mentions inductive loads ([datasheet-check.md](datasheet-check.md)). The diagrams show no D1 in the original configuration.
 
 ## How close is 12 V to the limits?
 | Limit | Value at V+ = 12 V, 3 A | Margin |
 |---|---|---|
 | Supply range (5…30 V) | 12 V | Well inside |
 | Compliance: V+ − 2 V ≥ I·R | 10 V available vs 3.0–3.1 V needed (max current ≈ 10 A, driver limit 5 A) | Large |
-| Driver power dissipation (V+ − I·R)·I | **≈ 27 W** (26.7 W with a hot coil) | **About 8 % above the 25 W figure, which is the datasheet number with no airflow at 25 °C.** The heatsink raises the real limit, but by an unknown amount. |
+| Driver power dissipation (V+ − I·R)·I | **≈ 27 W** (26.7 W with a hot coil) | Datasheet ([datasheet-check.md](datasheet-check.md)): 25 W with no airflow, **35 W with 5.5 CFM airflow**, both at 25 °C ambient. So 27 W is about 8 % over the no-airflow limit and about 23 % under the airflow limit. |
 | Break-even V+ for 25 W at 3 A | ≈ 11.3–11.6 V | 12 V is just beyond it |
 | LDC at idle (0 A) | 12 V (= V+) | Normal operation |
 
-**Dissipation is the only real constraint.** It is within reach of a heatsink, but the 25 W number isn't a heatsinked rating. Things to do:
+**Dissipation is the only real constraint.** The datasheet requires heatsinking, and the 35 W figure assumes airflow (5.5 CFM, about a small fan). A heatsink alone isn't covered by the datasheet number. Things to do:
 - Run the Wavelength SOA calculator with the actual heatsink and ambient temperature.
 - Watch the driver case temperature during the first minutes at 3 A.
 - If the coil runs below 3 A or pulsed, the dissipation drops. At 2.5 A it is about 24 W, and it is lower still at low duty cycle.
@@ -48,7 +48,7 @@ So D1 is inexpensive insurance against abrupt interruption. It does not affect n
 | 12 V | 0.14 ms | 27.1 W |
 
 ## Open items
-- Verify the driver's real thermal limit with the heatsink (SOA calculator and a temperature measurement).
+- Verify the thermal limit with the SOA calculator for your actual heatsink and airflow; add a fan (5.5 CFM, 35 W) or lower V+ to 11 V. Operating range is 0 to 40 °C ambient.
 - Confirm L and the total R with an LCR meter (the earlier whole-circuit reading was about 2 Ω).
 - Decide whether to fit D1 and a series zener.
 - Check LDC with a scope at the first power-up for oscillation.

@@ -8,3 +8,4 @@ Protection circuit design for driving a 3D MOT coil with a Wavelength LD5CHA las
 - `LD5CHA coil driving and protection - Claude.pdf`, if added, holds the earlier design discussion
 
 Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`
+- [docs/datasheet-check.md](docs/datasheet-check.md): LD5CHA specs verified against the Wavelength datasheet
