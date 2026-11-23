@@ -1,68 +1,74 @@
-# Ways to speed up the ramp-down, simplest first
+# Ways to speed up the ramp-down, compared at a common limit
 
 ![options](ramp_speed_options.png)
 
-Script: [ramp_speed_options.py](../scripts/ramp_speed_options.py). Baseline: L = 0.38 mH, R = 0.99 Ω, I0 = 2.5 A, V+ = 12 V. Times are 2.5 A → 10 %.
+Script: [ramp_speed_options.py](../scripts/ramp_speed_options.py).
+Load: **L = 0.38 mH, R = 0.99 Ω (confirmed)**, I0 = 2.5 A, V+ = 12 V. All times are 2.5 A → 10 %.
 
-## The one equation behind every option
+## The common limit
 
-A coil only gives up its current when you put voltage across it:
+Comparing methods only means something if they are all held to the **same peak LDC voltage**, because that is the one thing that can damage the driver. Quoting a faster time that was bought by pushing LDC higher is not a faster method, it is just a riskier setting.
 
-> **t ≈ L·I₀ / V = 0.95 mV·s / V**
+So the question for every row below is the same: **given a ceiling on peak LDC, how fast can this method go?**
 
-1 V gets you about 950 µs, 10 V about 95 µs, 100 V about 9.5 µs. So every solution below is really the same question twice:
-1. **How many volts can I impose across the coil?**
-2. **Who absorbs them — the LD5CHA's LDC pin, or something else?**
+The ceiling is a choice, not a datasheet number — Wavelength publishes no maximum for the LDC pin. The table gives five of them. For reference, LDC already sits at V+ = 12 V whenever the coil is idle, and 28 V is the maximum compliance voltage of the part (at a 30 V supply), so above 28 V is unverified in every sense.
 
-Question 2 is what separates the cheap options from the fast ones. While the coil hangs directly on LDA and LDC, every volt of clamp lands on LDC, and LDC has no published rating. A series switch breaks that link, which is why it is the only route to the tens-of-microseconds range.
+## Why the clamp is the theoretical best
 
-## The ladder
+The coil only sheds current when LDC is pushed above V+:
 
-| # | Solution | Parts to add | V on coil | t to 10 % | Peak LDC | What keeps it safe |
-|---|---|---|---|---|---|---|
-| 0 | **Setpoint RC, τ = 0.4 ms** | none | 0 | **920 µs** | 12 V | τ ≥ L/R means LDC never rises above V+ at all |
-| 0b | **Setpoint linear ramp** | none | 6 | **143 µs** | 18 V | You pick the overshoot by choosing T; driver stays in regulation |
-| 1 | **D1 freewheel diode** | 1 diode (1N5408) | 0.95 | **400 µs** | 12.9 V | Diode carries the current; LDC only 1 V above rail |
-| 2 | **D1 + 6 V zener in series** | 2 leaded parts | 6.0 | **116 µs** | 18 V | Zener sets the clamp; 1.2 mJ per shot is trivial for a 1.5KE |
-| 3 | **D1 + 15 V TVS in series** | 2 leaded parts | 15.9 | **49 µs** | 27.9 V | At the 28 V compliance figure — the edge of what is defensible |
-| 4 | **Series 2 Ω resistor + D1 across both** | resistor + diode | 0.95 | **204 µs** | 12.9 V | Also moves ~12 W of heat out of the driver into the resistor |
-| 5 | **Rewind: half the turns, 5 A** | rewind the coil | 15.9 | **23 µs** | 27.9 V | Same field, but t ∝ N at fixed clamp. Needs 5 A (driver max) |
-| 6 | **Series MOSFET + 100 V TVS** | FET + isolated gate driver | 100 | **8 µs** | 12 V | FET opens first, so the 100 V lands on the FET and TVS, never on LDC |
-| 7 | **Series MOSFET + 250 V TVS** | FET (250 V) + gate driver | 250 | **3.4 µs** | 12 V | Same, with a higher-voltage FET |
+> L·di/dt = V+ − LDC − i·R
 
-## Notes on each
+To empty the coil as fast as possible under a ceiling LDC ≤ V_max, you want LDC pinned **at** the ceiling for the whole ramp. That is exactly what a constant-voltage clamp (D1 + zener) does. No setpoint shape can beat it; the best they can do is match it.
 
-**0 and 0b — setpoint shaping, free.** Covered in [ramp-down-analysis.md](ramp-down-analysis.md). An RC with τ ≈ 0.4 ms gives zero overshoot. A linear ramp trades overshoot for speed: T = L·I₀/ΔV, so the 143 µs figure assumes you accept LDC reaching 18 V. These only work while the driver stays in regulation, so they do nothing for an uncommanded cut.
+That is the point of the right-hand plot. All three traces obey the same 18 V ceiling, but the RC spends its voltage budget at the start (its peak is at t = 0, where the current is largest), the linear ramp saves it for the end, and only the clamp holds the ceiling throughout. Hence 117 µs vs 143 µs vs 258 µs for the *same* stress on the driver.
 
-**1 — D1 alone.** The cheapest real protection. It also covers the abrupt cases (fault trip, logic loss, unplugging) that setpoint shaping cannot. 400 µs is already faster than the no-overshoot RC, because the diode holds ~1 V across the coil the whole way down instead of ~0.
+## The comparison
 
-**2 and 3 — D1 plus a zener or TVS.** The natural extension: raise the clamp voltage, get proportionally faster. The series pair goes across the coil, cathode to cathode, so it blocks in normal operation. Energy per shot is 1.2 mJ, so even at 100 Hz that is 0.12 W and any 1.5KE part is oversized for it. **This is where I would stop without more information**, because option 3 puts LDC at 27.9 V, and the datasheet never rates that pin.
+Fastest 2.5 A → 10 % that each method can reach, held to each ceiling:
 
-**4 — series resistor.** Worth knowing because it pays twice: it speeds the freewheel decay (R_total 2.99 Ω instead of 0.99 Ω) *and* it drops driver dissipation from 24 W to about 11 W by moving the heat into a resistor you can mount anywhere. The catch: the resistor burns 12.5 W continuously, and D1 must go across the coil *and* the resistor together, or the resistor is not in the freewheel loop.
+| Method | LDC ≤ 13 V | ≤ 15 V | ≤ 18 V | ≤ 22 V | ≤ 28 V |
+|---|---|---|---|---|---|
+| Exponential (RC) setpoint | 629 µs | 400 µs | 258 µs | 175 µs | 118 µs |
+| Linear setpoint ramp | 855 µs | 285 µs | 143 µs | 86 µs | 53 µs |
+| **D1 + zener — best possible without a switch** | **393 µs** | **200 µs** | **117 µs** | **75 µs** | **49 µs** |
+| Series 2 Ω + D1 + zener | 201 µs | 131 µs | 88 µs | 62 µs | 43 µs |
+| Half the turns, 5 A + clamp | 141 µs | 82 µs | 52 µs | 35 µs | 23 µs |
+| **Series MOSFET + 100 V TVS** | **8 µs** | **8 µs** | **8 µs** | **8 µs** | **8 µs** |
 
-**5 — rewind the coil.** The one option that changes the physics instead of working around it. At fixed ampere-turns, halving N gives L/4 and 2·I, so L·I halves and the decay halves with it. Also halves the volt-seconds the clamp has to absorb. Costs a rewind and pushes you to 5 A, which is the LD5CHA's absolute maximum with no margin.
+Clamp part needed for each column: the zener drops (ceiling − 12 V − 0.95 V). At a 13 V ceiling that is D1 alone; at 18 V a ~5 V zener; at 28 V a ~15 V TVS.
 
-**6 and 7 — series MOSFET.** The only way past ~50 µs. The FET sits between the coil and LDC. When it opens, the coil dumps into a high-voltage TVS while LDC is isolated and actually falls toward 0. Peak LDC is just V+. The real limit here is **not** the TVS but the **gate driver**: the Si8751 from the earlier chat is specified at roughly 46 µs turn-off (unverified), which would dominate an 8 µs decay. A conventional isolated gate driver with its own floating supply turns off in well under 1 µs and would be the right choice. Sequence matters: open the FET first, then zero the setpoint, so the driver is not left saturated against an open load.
+## Reading the table
+
+- **The MOSFET row is flat.** That is the whole reason the complicated option exists. It is the only method whose speed does not depend on the ceiling, because the FET opens and the 100 V lands on the FET and its TVS while LDC is isolated and falls toward 0. Every other row buys speed by spending LDC headroom; this one does not.
+- **Setpoint shaping is free but suboptimal.** At any ceiling, the RC and the linear ramp are slower than the clamp that respects the same ceiling. They also only work while the driver is in regulation, so they do nothing for an uncommanded cut.
+- **RC vs linear changes order.** Below about a 13.6 V ceiling the RC wins; above it the linear ramp wins. Neither ever beats the clamp.
+- **A series 2 Ω resistor pays twice.** It speeds every clamp case (R_total 2.99 Ω instead of 0.99 Ω) *and* drops driver dissipation from 24 W to about 11 W by moving heat into a resistor you can mount anywhere. It costs 12.5 W in that resistor, and D1 must span the coil **and** the resistor or the resistor is not in the freewheel loop.
+- **Rewinding changes the physics.** At fixed ampere-turns, halving N gives L/4 and 2·I, so L·I halves and so does the time, at any ceiling. It costs a rewind and pushes you to 5 A, the LD5CHA's absolute maximum with no margin.
+
+## What limits the MOSFET option
+
+Not the TVS — the **gate driver**. The Si8751 named in the earlier chat is specified around 46 µs turn-off (unverified), which would completely swamp an 8 µs decay. A conventional isolated gate driver with its own floating supply turns off in well under 1 µs. Sequence matters too: open the FET first, then zero the setpoint, so the driver is not left saturated against an open load.
 
 ## Things that do not help
 
-- **Raising V+.** It speeds the ramp *up* (0.14 ms at 12 V vs 0.52 ms at 6 V) and does nothing for the ramp *down*. Current falls only when LDC rises above V+, so a higher rail just raises the bar. It also costs dissipation.
-- **The ENABLE pin.** The datasheet gives a 640 µs disable fall time and a 260 µs turn-off ramp — slower than a setpoint step, so it is a safety interlock, not a speed tool.
-- **A capacitor across the coil.** It rings with L rather than damping, and swings LDC negative.
+- **Raising V+.** Current only falls when LDC rises *above* V+, so a higher rail raises the bar it has to clear. It speeds the ramp *up* (0.14 ms at 12 V vs 0.52 ms at 6 V) and costs dissipation.
+- **The ENABLE pin.** Datasheet gives 640 µs disable fall time and a 260 µs turn-off ramp — slower than a setpoint step. It is an interlock, not a speed tool.
+- **A capacitor across the coil.** Rings with L rather than damping it, and swings LDC negative.
 
 ## The limit that may make all of this moot
 
-If this coil sits near a metal chamber, **eddy currents** in the mounts and walls keep the *field* alive after the *current* is gone. Those time constants are typically 100 µs to a few ms for stainless steel, and much shorter for glass cells. Chasing 8 µs in the current is pointless if the field takes 500 µs to die. Measure the field with a pickup coil or a magnetometer before buying a MOSFET.
+If the coil sits near a metal chamber, **eddy currents** in the mounts and walls keep the *field* alive after the *current* is gone — typically 100 µs to a few ms for stainless steel, much faster for a glass cell. Chasing 8 µs of current decay is wasted if the field takes 500 µs to die. Measure the field with a pickup coil or magnetometer before buying a MOSFET.
 
 ## Suggested path
 
-1. Fit **D1** now (option 1, 400 µs). It protects against the abrupt cases regardless of what else you do.
-2. Measure the **field** decay, not just the current. That tells you whether anything faster is useful.
-3. If you need faster and the field can follow, add a **zener in series with D1** (option 2, 116 µs) — two leaded parts, no rework.
-4. Only go to a **series MOSFET** (option 6) if you have measured that you need sub-50 µs, and budget a fast isolated gate driver, not the Si8751.
+1. **Fit D1 now.** At a 13 V ceiling it gives 393 µs, and it is the only thing here that also covers uncommanded interruptions.
+2. **Measure the field decay**, not just the current, and decide what speed is actually useful.
+3. **If you need faster**, add a zener in series with D1 — two leaded parts, no rework, and it is the best you can do without a switch.
+4. **Only go to a series MOSFET** if you have measured that you need sub-50 µs, and budget a fast isolated gate driver.
 
 ## Caveats
 
-- All figures are from the model, not the bench, and assume L = 0.38 mH and R = 0.99 Ω — neither has been measured on your hardware.
-- The datasheet gives **no maximum LDC voltage**. The 28 V line is the maximum compliance figure used as a stand-in, so options 3 and 5 are at an unverified boundary.
-- The 1N5408 forward drop is modelled as 0.95 V at 2.5 A.
+- L and R are confirmed; everything else here is modelled, not measured on the bench.
+- The 1N5408 forward drop is taken as 0.95 V at 2.5 A.
+- The datasheet gives **no maximum LDC voltage**. Which column you are allowed to use is an open question.

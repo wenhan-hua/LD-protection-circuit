@@ -49,6 +49,8 @@ L = 0.8 × 0.785 × 10⁴ / (5.32 + 5.32 + 5.91) = **380 µH**
 
 The two methods agree within about 2 %.
 
+> **Confirmed:** L = 0.38 mH and a total circuit R = 0.99 Ω (0.19 Ω coil + ~0.8 Ω cables) have since been confirmed on the hardware, matching the estimate below.
+
 ## Result (single coil)
 
 | Quantity | Estimate |
